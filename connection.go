@@ -54,6 +54,11 @@ func (sc *snowflakeConn) exec(
 	var err error
 	counter := atomic.AddUint64(&sc.SequenceCounter, 1) // query sequence counter
 
+	ctxNoResult, _ := ctx.Value("snowflakeExecAsync").(bool)
+	if ctxNoResult {
+		noResult = true
+	}
+
 	req := execRequest{
 		SQLText:    query,
 		AsyncExec:  noResult,
